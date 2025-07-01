@@ -9,26 +9,12 @@
 #include "SineLoop.h"
 #include "NoisePatterns.h"
 #include "LEDHelpers.h"
+#include "WaveRenderer.h"
 
 const char* ssid = "ESP32-Access-Point";
 const char* password = "12345678";
 
 WebServer server(80);
-
-TBlendType currentBlending;
-
-float fps = 120;
-
-// Values that change over time
-uint16_t t_mod = 0;
-
-double mod1_phase = 0;
-double mod2_phase = 0;
-
-double mod1_frequency = 0.05; // Was two decimals slower!
-double mod2_frequency = 0.08; // Was two decimals slower!
-
-uint8_t decay_rate = 100;
 
 unsigned long now;
 
@@ -39,10 +25,6 @@ const unsigned long long_interval = 4000;
 const unsigned long pulse_rise = 200;
 const unsigned long pulse_fall = 1000;
 const unsigned long pulse_duration = pulse_rise + pulse_fall;
-
-CRGBPalette16 paletteA = LavaColors_p;
-CRGBPalette16 paletteB = OceanColors_p;
-CRGBPalette16 targetPalette = paletteB;
 
 bool paletteFlipState = false; // false = A, true = B
 bool aboveThreshold = false;
@@ -65,7 +47,6 @@ void updatePaletteModulated() {
   // Smooth blend toward the target palette
   nblendPaletteTowardPalette(currentPalette, targetPalette, 1);
 }
-
 
 bool particle_event = false;
 unsigned long last_particle_event = 0;
@@ -96,94 +77,6 @@ void add_glitter(uint8_t num_particles)
     bar_2[ random16(NUM_LEDS_BAR) ] += CRGB::White;
     strip_1[ random16(NUM_LEDS_STRIP) ] += CRGB::White;
     strip_2[ random16(NUM_LEDS_STRIP) ] += CRGB::White;
-  }
-}
-
-struct Wave {
-  unsigned long startTime;
-  unsigned long duration;     // total time (matrix + bars)
-  CRGB color;
-  float feather_width;
-};
-const unsigned long wave_lifetime = 1500;
-const uint8_t max_waves = 50;  // bump up for more layering
-std::vector<Wave> waves;
-unsigned long next_wave_time = 0;
-
-void spawn_new_wave() {
-  Wave w;
-  w.startTime = millis();
-
-  uint8_t index = random8();
-  w.color = ColorFromPalette(currentPalette, index);
-
-  w.feather_width = random(3, 8);  // width
-
-  // Random speed: total wave lifetime between 1000–2500ms
-  w.duration = random(1000, 2500);
-
-  waves.push_back(w);
-  next_wave_time = millis() + random(100, 500);
-}
-
-void render_multi_wave_pulse() {
-  fadeToBlackBy(matrix, NUM_LEDS_MATRIX, 5);  // adjust fade rate as needed
-  fadeToBlackBy(bar_1, NUM_LEDS_BAR, 5);
-  fadeToBlackBy(bar_2, NUM_LEDS_BAR, 5);
-
-
-  unsigned long now = millis();
-
-  // Maybe spawn new wave
-  if (millis() > next_wave_time && waves.size() < max_waves) {
-    spawn_new_wave();
-  }
-
-  for (int w = 0; w < waves.size(); ) {
-    unsigned long age = now - waves[w].startTime;
-
-    if (age >= waves[w].duration) {
-      waves.erase(waves.begin() + w);
-      continue;
-    }
-
-    unsigned long matrix_phase = waves[w].duration * 0.25;  // matrix = 25% of duration
-    unsigned long bar_phase = waves[w].duration - matrix_phase;
-
-    CRGB base_color = waves[w].color;
-    float feather = waves[w].feather_width;
-
-    if (age < matrix_phase) {
-      float progress = age / (float)matrix_phase;
-      float radius = (COLS / 2.0) * progress;
-      int center = COLS / 2;
-
-      for (int x = 0; x < COLS; x++) {
-        float distance = abs(x - center);
-        float brightness = max(0.0f, 1.0f - abs(distance - radius) / feather);
-        CRGB color = base_color;
-        color.nscale8(brightness * 255);
-
-        for (int y = 0; y < ROWS; y++) {
-          matrix[XY(x, y)] += color;
-        }
-      }
-    } else {
-      float progress = (age - matrix_phase) / (float)bar_phase;
-      float radius = NUM_LEDS_BAR * progress;
-
-      for (int i = 0; i < NUM_LEDS_BAR; i++) {
-        float distance = i;
-        float brightness = max(0.0f, 1.0f - abs(distance - radius) / feather);
-        CRGB color = base_color;
-        color.nscale8(brightness * 255);
-
-        bar_1[i] += color;
-        bar_2[i] += color;
-      }
-    }
-
-    ++w;
   }
 }
 
@@ -222,7 +115,6 @@ void next_mode() {
   }
 }
 
-
 void add_pulse() {
   now = millis();
   if (long_pulse && now > (last_pulse + long_interval)) {
@@ -247,7 +139,6 @@ void add_pulse() {
     }
   }
 }
-
 
 void handleModeSwitch() {
   next_mode();
@@ -405,8 +296,6 @@ void setup() {
   FastLED.addLeds<WS2801, STRIP2_DATA_PIN, STRIP2_CLOCK_PIN, RGB>(strip_2, NUM_LEDS_STRIP);
 
   FastLED.setBrightness(currentBrightness);
-  //currentPalette = ForestColors_p;
-  currentBlending = LINEARBLEND;
 
   fill_solid(bar_1, NUM_LEDS_BAR, CRGB::Black);
   fill_solid(bar_2, NUM_LEDS_BAR, CRGB::Black);
@@ -421,10 +310,7 @@ void loop() {
   server.handleClient();
 
   EVERY_N_MILLISECONDS(1000 * (1 / fps)) {
-    t_mod = (millis() / 100) % 65535;
-    mod1 = sin(t_mod * mod1_frequency);
-    mod2 = sin(t_mod * mod2_frequency);
-
+    updateModifiers();
     updatePaletteModulated();
 
     fade_all(decay_rate);
@@ -432,12 +318,11 @@ void loop() {
     if (current_mode == sines) {
       render_sine();
     } else if (current_mode == center_pulse) {
-      render_multi_wave_pulse();
+      renderWaves();
     } else {
       render_noise();
     }
 
-    //render_noise();
     FastLED.show();
   }
 

@@ -34,11 +34,24 @@ extern CRGB bar_2[NUM_LEDS_BAR];
 extern CRGB strip_1[NUM_LEDS_STRIP];
 extern CRGB strip_2[NUM_LEDS_STRIP];
 
-// Global variables
+// Constants
+constexpr float fps = 120;
+constexpr double mod1_frequency = 0.005;
+constexpr double mod2_frequency = 0.008;
+
+// Variables
 extern double mod1;
 extern double mod2;
 extern Mode current_mode;
 extern int currentBrightness;
+extern TBlendType currentBlending;
+extern int decay_rate;
+
 extern CRGBPalette16 currentPalette; 
+extern CRGBPalette16 paletteA;
+extern CRGBPalette16 paletteB;
+extern CRGBPalette16 targetPalette;
+
+extern void updateModifiers();
 
 #endif // GLOBALS_H

@@ -4,16 +4,16 @@
 // moving sine waves
 byte intense;
 fract8 intensity = 100;
-uint8_t speed_1 = 9;
-uint8_t speed_2 = 5;
-uint8_t speed_3 = 20;
-uint8_t frequency_1 = 2;
-uint8_t frequency_2 = 5;
-uint8_t frequency_3 = 4;
+int speed_1 = 9;
+int speed_2 = 5;
+int speed_3 = 20;
+int frequency_1 = 2;
+int frequency_2 = 5;
+int frequency_3 = 4;
 
 int i, j, t;
 
-void sine_loop(CRGB leds[], uint8_t num_leds, uint8_t factor) {
+void sine_loop(CRGB leds[], int num_leds, int factor) {
   long now = millis();
 
   t = (now / 100) % 65535;

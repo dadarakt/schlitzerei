@@ -3,15 +3,30 @@
 #include "ColorPalettes.h"
 #include "Modes.h"
 
-// Define the actual storage for the LED buffers
+// LED setup
 CRGB strip_1[NUM_LEDS_STRIP];
 CRGB strip_2[NUM_LEDS_STRIP];
 CRGB bar_1[NUM_LEDS_BAR];
 CRGB bar_2[NUM_LEDS_BAR];
 CRGB matrix[NUM_LEDS_MATRIX];
 
+Mode current_mode = noise_lava;
+int currentBrightness = 50;
+
+CRGBPalette16 currentPalette = oranje; 
+CRGBPalette16 paletteA = LavaColors_p;
+CRGBPalette16 paletteB = OceanColors_p;
+CRGBPalette16 targetPalette = paletteB;
+TBlendType currentBlending = LINEARBLEND;
+
+// Modifiers
+int t_mod = 0;
 double mod1 = 0;
 double mod2 = 0;
-Mode current_mode = center_pulse;
-int currentBrightness = 50;
-CRGBPalette16 currentPalette = oranje; 
+int decay_rate = 100;
+
+void updateModifiers() {
+    t_mod = (millis() / 100) % 65535;
+    mod1 = sin(t_mod * mod1_frequency);
+    mod2 = sin(t_mod * mod2_frequency);
+}
