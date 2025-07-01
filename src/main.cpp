@@ -1,13 +1,13 @@
 #include <FastLED.h>
 #include "ColorPalettes.h"
 #include "Modes.h"
-#include "MatrixLayout.h"
 #include "Globals.h"
 #include "SineLoop.h"
 #include "NoisePatterns.h"
 #include "LEDHelpers.h"
 #include "WaveRenderer.h"
 #include "Server.h"
+#include "patterns/SearchlightPattern.h"
 
 unsigned long now;
 
@@ -116,6 +116,8 @@ void setup() {
   fill_solid(strip_2, NUM_LEDS_STRIP, CRGB::Black);
   fill_solid(matrix, NUM_LEDS_MATRIX, CRGB::Black);
 
+  initSearchlight();
+
   FastLED.show();
 }
 
@@ -128,23 +130,26 @@ void loop() {
 
     fade_all(decay_rate);
 
-    if (current_mode == sines) {
-      render_sine();
-    } else if (current_mode == center_pulse) {
-      renderWaves();
-    } else {
-      render_noise();
-    }
+    updateSearchlight();
+    renderSearchlightPattern();
+
+    //if (current_mode == sines) {
+    //  render_sine();
+    //} else if (current_mode == center_pulse) {
+    //  renderWaves();
+    //} else {
+    //  render_noise();
+    //}
 
     FastLED.show();
   }
 
-  check_particle_event();
-  if (particle_event) {
-    add_glitter(event_intensity);
-  }
+  //check_particle_event();
+  //if (particle_event) {
+  //  add_glitter(event_intensity);
+  //}
 
-  if (current_mode == pulsing) {
-    add_pulse();
-  }
+  //if (current_mode == pulsing) {
+  //  add_pulse();
+  //}
 }

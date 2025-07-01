@@ -1,7 +1,7 @@
-#include "MatrixLayout.h"
 #include "NoisePatterns.h"
 #include "FastLED.h"
 #include "Globals.h"
+#include "LEDHelpers.h"
 
 uint8_t data, old_data, new_data;
 uint16_t i_offset, j_offset;

@@ -11,7 +11,7 @@ CRGB bar_2[NUM_LEDS_BAR];
 CRGB matrix[NUM_LEDS_MATRIX];
 
 Mode current_mode = noise_lava;
-int currentBrightness = 50;
+int currentBrightness = 25;
 
 CRGBPalette16 currentPalette = oranje; 
 CRGBPalette16 paletteA = LavaColors_p;

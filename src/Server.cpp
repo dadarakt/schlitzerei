@@ -13,7 +13,7 @@ void updateServer() {
 }
 
 void handleModeSwitch() {
-  next_mode();
+  nextMode();
   server.send(200, "text/plain", "switched");
 }
 

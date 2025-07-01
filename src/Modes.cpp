@@ -2,10 +2,8 @@
 #include "Globals.h"
 #include "ColorPalettes.h"
 
-void next_mode() {
-  current_mode = static_cast<Mode>((static_cast<int>(current_mode) + 1) % NUM_MODES);
-
-  switch (current_mode) {
+void setMode(Mode mode) {
+  switch (mode) {
     case noise_orange:
       decay_rate = 255;
       currentPalette = oranje;
@@ -36,3 +34,10 @@ void next_mode() {
       break;
   }
 }
+
+void nextMode() {
+  current_mode = static_cast<Mode>((static_cast<int>(current_mode) + 1) % NUM_MODES);
+
+  setMode(current_mode);
+}
+

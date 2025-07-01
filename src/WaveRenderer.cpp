@@ -1,7 +1,7 @@
 // WaveRenderer.cpp
 #include "WaveRenderer.h"
 #include "Globals.h"
-#include "MatrixLayout.h"
+#include "LEDHelpers.h"
 
 static std::vector<Wave> waves;
 static unsigned long next_wave_time = 0;
