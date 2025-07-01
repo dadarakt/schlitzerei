@@ -2,6 +2,8 @@
 #ifndef MODES_H
 #define MODES_H
 
+void next_mode();
+
 enum Mode {
   noise_red,
   noise_blue,
@@ -12,4 +14,5 @@ enum Mode {
   center_pulse,
   NUM_MODES
 };
+
 #endif
