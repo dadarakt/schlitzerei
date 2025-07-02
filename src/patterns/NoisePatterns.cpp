@@ -6,11 +6,11 @@
 uint8_t data, old_data, new_data;
 uint16_t i_offset, j_offset;
 
-uint16_t minSpeed = 1;
-uint16_t maxSpeed = 10;
-uint16_t speed = 2;  // a nice starting speed, mixes well with a scale of 100
+uint16_t minSpeed = 5;
+uint16_t maxSpeed = 20;
+uint16_t speed = 5;  // a nice starting speed, mixes well with a scale of 100
 uint16_t minScale = 1;
-uint16_t maxScale = 100;
+uint16_t maxScale = 50;
 uint16_t scale = 10;  // scale 50 is nice marbly, lower gets to shifting colors, higher to flimmering
 
 int x = random16();
@@ -55,8 +55,8 @@ void fill_noise_8() {
   z += speed / 10;
 
   // apply slow drift to X and Y, just for visual variation.
-  x += speed / 32;
-  y -= speed / 64;
+  x += speed / 16;
+  y -= speed / 32;
 }
 
 void map_noise_to_leds_with_palette(CRGB leds[], uint8_t rows, uint8_t cols, uint8_t offset) {
@@ -115,7 +115,6 @@ void map_noise_to_leds_with_hue() {
 void render_noise() {
   speed = minSpeed + mod2 * (maxSpeed - minSpeed);
   scale = minScale + mod1 * (maxScale - minScale);
-  //MIDI.read();
   fill_noise_8();
   //map_noise_to_leds_with_hue();
   map_noise_to_leds_with_palette(matrix, ROWS, COLS, 0);

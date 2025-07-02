@@ -2,11 +2,12 @@
 #include "ColorPalettes.h"
 #include "Modes.h"
 #include "Globals.h"
-#include "SineLoop.h"
-#include "NoisePatterns.h"
 #include "LEDHelpers.h"
-#include "WaveRenderer.h"
 #include "Server.h"
+
+#include "patterns/WaveRenderer.h"
+#include "patterns/SineLoop.h"
+#include "patterns/NoisePatterns.h"
 #include "patterns/SearchlightPattern.h"
 
 unsigned long now;
@@ -130,16 +131,17 @@ void loop() {
 
     fade_all(decay_rate);
 
-    updateSearchlight();
-    renderSearchlightPattern();
+    //updateSearchlight();
+    // renderSearchlightPattern();
+   
 
-    //if (current_mode == sines) {
-    //  render_sine();
-    //} else if (current_mode == center_pulse) {
-    //  renderWaves();
-    //} else {
-    //  render_noise();
-    //}
+    if (current_mode == sines) {
+      render_sine();
+    } else if (current_mode == center_pulse) {
+      renderWaves();
+    } else {
+      render_noise();
+    }
 
     FastLED.show();
   }

@@ -24,6 +24,7 @@ void handleSetMode() {
     // Ensure the value is in the valid range of the enum
     if (val >= 0 && val <= static_cast<int>(center_pulse)) {
       current_mode = static_cast<Mode>(val);
+      setMode(current_mode);
       Serial.println("Mode changed to: " + String(val));
       server.send(200, "text/plain", "Mode changed to " + String(val));
     } else {
