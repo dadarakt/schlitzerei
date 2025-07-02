@@ -1,6 +1,6 @@
 #include "Server.h"
 #include "Globals.h"
-#include "Modes.h"
+#include "patterns/Patterns.h"
 #include <WiFi.h>
 #include <WebServer.h>
 
@@ -12,23 +12,23 @@ void updateServer() {
   server.handleClient();
 }
 
-void handleModeSwitch() {
-  nextMode();
+void handlePatternSwitch() {
+  nextPattern();
   server.send(200, "text/plain", "switched");
 }
 
-void handleSetMode() {
+void handleSetPattern() {
   if (server.hasArg("value")) {
     int val = server.arg("value").toInt();
 
     // Ensure the value is in the valid range of the enum
-    if (val >= 0 && val <= static_cast<int>(center_pulse)) {
-      current_mode = static_cast<Mode>(val);
-      setMode(current_mode);
-      Serial.println("Mode changed to: " + String(val));
-      server.send(200, "text/plain", "Mode changed to " + String(val));
+    if (val >= 0 && val < static_cast<int>(NUM_PATTERNS)) {
+      Pattern nextPattern = static_cast<Pattern>(val);
+      setPattern(nextPattern);
+      Serial.println("Pattern changed to: " + String(val));
+      server.send(200, "text/plain", "Pattern changed to " + String(val));
     } else {
-      server.send(400, "text/plain", "Invalid mode value");
+      server.send(400, "text/plain", "Invalid pattern value");
     }
   } else {
     server.send(400, "text/plain", "Missing value parameter");
@@ -48,11 +48,9 @@ void handleSetBrightness() {
 }
 
 void handleRoot() {
-  const char* modeNames[] = {
-    "noise_red", "noise_blue", "sines", "noise_lava", "noise_orange", "pulsing", "center_pulse"
-  };
+  const char* patternNames[] = {"Noise", "Sines", "Waves", "Search Light"};
 
-  int modeValue = static_cast<int>(current_mode);
+  int patternValue = static_cast<int>(currentPattern);
   String html = R"rawliteral(
     <!DOCTYPE html>
     <html>
@@ -89,8 +87,8 @@ void handleRoot() {
     </head>
     <body>
       <h1>ESP32 Control</h1>
-      <p>Current Mode: <strong>)rawliteral";
-  html += modeNames[modeValue];
+      <p>Current Pattern: <strong>)rawliteral";
+  html += patternNames[patternValue];
   html += R"rawliteral(</strong></p>
 
       <div class="slider-container">
@@ -104,17 +102,17 @@ void handleRoot() {
           onchange="sendValue(this.value)">
       </div>
 
-      <h2>Select Mode</h2>
-      <select id="modeSelect" onchange="setMode(this.value))rawliteral";
+      <h2>Select Pattern</h2>
+      <select id="patternSelect" onchange="setPattern(this.value))rawliteral";
   html += R"rawliteral(">)rawliteral";
 
-  for (int i = 0; i < sizeof(modeNames) / sizeof(modeNames[0]); ++i) {
+  for (int i = 0; i < sizeof(patternNames) / sizeof(patternNames[0]); ++i) {
     html += "<option value=\"";
     html += i;
     html += "\"";
-    if (i == modeValue) html += " selected";
+    if (i == patternValue) html += " selected";
     html += ">";
-    html += modeNames[i];
+    html += patternNames[i];
     html += "</option>";
   }
 
@@ -128,8 +126,8 @@ void handleRoot() {
         function sendValue(val) {
           fetch('/setBrightness?value=' + val);
         }
-        function setMode(val) {
-          fetch('/mode?value=' + val).then(() => location.reload());
+        function setPattern(val) {
+          fetch('/pattern?value=' + val).then(() => location.reload());
         }
       </script>
     </body>
@@ -148,8 +146,8 @@ void initServer() {
   Serial.println(WiFi.softAPIP());
 
   server.on("/", handleRoot);
-  server.on("/switchMode", handleModeSwitch);
-  server.on("/mode", handleSetMode);
+  server.on("/switchPattern", handlePatternSwitch);
+  server.on("/pattern", handleSetPattern);
   server.on("/setBrightness", handleSetBrightness);
 
   server.begin();

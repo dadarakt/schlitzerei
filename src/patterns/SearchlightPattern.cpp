@@ -10,11 +10,6 @@
   unsigned long searchlight_start = 0;
   unsigned long searchlight_duration = 1500;
   
-  void initSearchlight() {
-    searchlight_active = false;
-    searchlight_start = 0;
-  }
-  
   void updateSearchlight() {
     static unsigned long next_activation_time = 0;
     static unsigned long active_duration = 0;

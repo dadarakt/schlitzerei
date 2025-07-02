@@ -1,10 +1,10 @@
 #include <FastLED.h>
 #include "ColorPalettes.h"
-#include "Modes.h"
 #include "Globals.h"
 #include "LEDHelpers.h"
 #include "Server.h"
 
+#include "patterns/Patterns.h"
 #include "patterns/WaveRenderer.h"
 #include "patterns/SineLoop.h"
 #include "patterns/NoisePatterns.h"
@@ -12,6 +12,7 @@
 
 unsigned long now;
 
+// TODO either move or remove this code
 bool long_pulse = true;
 unsigned long last_pulse = 0;
 const unsigned long short_interval = 1000;
@@ -20,14 +21,12 @@ const unsigned long pulse_rise = 200;
 const unsigned long pulse_fall = 1000;
 const unsigned long pulse_duration = pulse_rise + pulse_fall;
 
-bool paletteFlipState = false; // false = A, true = B
-bool aboveThreshold = false;
-
 bool particle_event = false;
 unsigned long last_particle_event = 0;
 unsigned long event_duration = 0;
 unsigned long event_intensity = 0;
 unsigned long next_particle_event = 0;
+
 
 void determine_next_particle_event(long now) {
   next_particle_event = now + random(60, 120) * 1000;
@@ -80,6 +79,17 @@ void add_pulse() {
   }
 }
 
+void renderActivePattern() {
+  switch(currentPattern) {
+    case sinePattern:        render_sine(); break;
+    case noisePattern:       render_noise(); break;
+    case wavePattern:        renderWaves(); break;
+    case searchlightPattern: renderSearchlightPattern(); break;
+  };
+
+  FastLED.show();
+}
+
 void setup() {
   initServer();
   determine_next_particle_event(0);
@@ -98,8 +108,6 @@ void setup() {
   fill_solid(strip_2, NUM_LEDS_STRIP, CRGB::Black);
   fill_solid(matrix, NUM_LEDS_MATRIX, CRGB::Black);
 
-  initSearchlight();
-
   FastLED.show();
 }
 
@@ -112,19 +120,7 @@ void loop() {
 
     fade_all(decay_rate);
 
-    //updateSearchlight();
-    // renderSearchlightPattern();
-   
-
-    if (current_mode == sines) {
-      render_sine();
-    } else if (current_mode == center_pulse) {
-      renderWaves();
-    } else {
-      render_noise();
-    }
-
-    FastLED.show();
+    renderActivePattern();
   }
 
   //check_particle_event();

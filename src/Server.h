@@ -1,10 +1,7 @@
-// server.h
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
 void initServer();
 void updateServer();
 void handleRoot();
 void handleSetBrightness();
-void handleSetMode();
-#endif
+void handleSetPattern();
