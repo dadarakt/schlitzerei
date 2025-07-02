@@ -34,3 +34,7 @@ void nextPalette() {
     paletteIndex = (paletteIndex + 1) % NUM_PALETTES;
     targetPalette = palettes[paletteIndex];
 }
+
+void updatePalettes() {
+  nblendPaletteTowardPalette(currentPalette, targetPalette, 1);
+}

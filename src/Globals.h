@@ -48,8 +48,6 @@ extern TBlendType currentBlending;
 extern int decay_rate;
 
 extern CRGBPalette16 currentPalette; 
-extern CRGBPalette16 paletteA;
-extern CRGBPalette16 paletteB;
 extern CRGBPalette16 targetPalette;
 
 extern void updateModifiers();

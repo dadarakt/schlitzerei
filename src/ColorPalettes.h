@@ -31,3 +31,4 @@ extern const CRGBPalette16 palettes[];
 
 void setColorPalette(CRGBPalette16 palette);
 void nextPalette();
+void updatePalettes();

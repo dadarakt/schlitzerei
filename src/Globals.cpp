@@ -14,9 +14,7 @@ Mode current_mode = noise_lava;
 int currentBrightness = 25;
 
 CRGBPalette16 currentPalette = oranje; 
-CRGBPalette16 paletteA = LavaColors_p;
-CRGBPalette16 paletteB = OceanColors_p;
-CRGBPalette16 targetPalette = paletteB;
+CRGBPalette16 targetPalette = oranje;
 TBlendType currentBlending = LINEARBLEND;
 
 // Modifiers

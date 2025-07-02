@@ -23,25 +23,6 @@ const unsigned long pulse_duration = pulse_rise + pulse_fall;
 bool paletteFlipState = false; // false = A, true = B
 bool aboveThreshold = false;
 
-void updatePaletteModulated() {
-  float threshold = 0.9;
-
-  if (mod1 > threshold && !aboveThreshold) {
-    aboveThreshold = true;
-
-    // Flip to the other palette
-    paletteFlipState = !paletteFlipState;
-    targetPalette = paletteFlipState ? paletteB : paletteA;
-  }
-
-  if (mod1 < -threshold && aboveThreshold) {
-    aboveThreshold = false;
-  }
-
-  // Smooth blend toward the target palette
-  nblendPaletteTowardPalette(currentPalette, targetPalette, 1);
-}
-
 bool particle_event = false;
 unsigned long last_particle_event = 0;
 unsigned long event_duration = 0;
@@ -127,7 +108,7 @@ void loop() {
 
   EVERY_N_MILLISECONDS(1000 * (1 / fps)) {
     updateModifiers();
-    updatePaletteModulated();
+    updatePalettes();
 
     fade_all(decay_rate);
 
