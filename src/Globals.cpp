@@ -16,10 +16,12 @@ CRGBPalette16 targetPalette = oranje;
 TBlendType currentBlending = LINEARBLEND;
 
 // Modifiers
+
 int t_mod = 0;
 double mod1 = 0;
 double mod2 = 0;
 int decay_rate = 100;
+bool autoCycle = false;
 
 void updateModifiers() {
     t_mod = (millis() / 100) % 65535;

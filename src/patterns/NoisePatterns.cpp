@@ -24,8 +24,6 @@ uint8_t data_smoothing = speed < 50
 // This is the array that we keep our computed noise values in
 uint16_t noise[MATRIX_MAX_DIMENSION][MATRIX_MAX_DIMENSION];
 
-static uint8_t led_index;
-
 void fill_noise_8() {
   int i,j;
 
@@ -95,6 +93,7 @@ void map_noise_to_leds_with_palette(CRGB leds[], uint8_t rows, uint8_t cols, uin
 
 void map_noise_to_leds_with_hue() {
   static uint8_t ihue = 0;
+  static uint8_t led_index;
 
   for (int i = 0; i < COLS; i++) {
     for (int j = 0; j < ROWS; j++) {

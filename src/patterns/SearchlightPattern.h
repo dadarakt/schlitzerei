@@ -1,13 +1,8 @@
-// SearchlightPattern.h
-#ifndef SEARCH_LIGHT_PATTERN_H
-#define SEARCH_LIGHT_PATTERN_H
+#pragma once
+#include "FastLED.h"
 
-void initSearchlight();
-void updateSearchlight();
-void renderRedGlimmer();
-void renderRedGlimmerMatrix();
-void renderSearchlightBars();
-void renderSearchlightMatrix();
 void renderSearchlightPattern();
-
-#endif
+void updateSearchlight();
+void renderRedGlimmer(CRGB* leds, int num_leds, uint16_t offset);
+void renderRedGlimmerMatrix();
+void renderSearchlightCombined();

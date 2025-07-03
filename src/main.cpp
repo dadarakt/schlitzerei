@@ -123,6 +123,12 @@ void loop() {
     renderActivePattern();
   }
 
+  EVERY_N_SECONDS(5) {
+    if (autoCycle) {
+      nextPattern();
+    }
+  }
+
   //check_particle_event();
   //if (particle_event) {
   //  add_glitter(event_intensity);

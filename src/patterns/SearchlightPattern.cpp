@@ -29,10 +29,21 @@
       }
     }
   }
+
+  void renderRedGlimmerNew(CRGB* leds, int num_leds, uint16_t offset = 0) {
+    // sine wave from 0-1
+    int t = (millis() / 512) % 65535;
+    int intensity = map(sin8(t), -1, 1, 0, 255);
+
+    for (int i = 0; i < num_leds; i++) {
+      leds[i] = CRGB(intensity, 0, 0);
+    }
+  }
   
   void renderRedGlimmer(CRGB* leds, int num_leds, uint16_t offset = 0) {
     float speed = 25 + ((mod1 + 1.0f) / 2.0f) * 4.0f; // modulate pulsing speed
     float pulse = ((sin8(millis() / speed) - 128) / 128.0f + 1.0f) * 1.1f; // stronger pulsing // heartbeat-like
+
     for (int i = 0; i < num_leds; i++) {
       uint8_t noise = inoise8(i * 10, millis() / 8 + offset);
       int red_intensity = 30 + noise * 0.4f + ((mod1 + 1.0f) / 2.0f) * 80.0f;
@@ -57,7 +68,6 @@
   void renderSearchlightCombined() {
     extern CRGB strip_1[];
     extern CRGB strip_2[];
-    const int NUM_LEDS_STRIP = NUM_LEDS_BAR;
     if (!searchlight_active) return;
   
     float total_width = NUM_LEDS_BAR * 2 + COLS + NUM_LEDS_STRIP * 2;
@@ -111,12 +121,12 @@
   void renderSearchlightPattern() {
   extern CRGB strip_1[];
   extern CRGB strip_2[];
-  const int NUM_LEDS_STRIP = NUM_LEDS_BAR;
 
+  updateSearchlight();
   renderRedGlimmer(bar_1, NUM_LEDS_BAR);
   renderRedGlimmer(bar_2, NUM_LEDS_BAR, 1000);
-  renderRedGlimmer(strip_1, NUM_LEDS_STRIP, 2000);
-  renderRedGlimmer(strip_2, NUM_LEDS_STRIP, 3000);
+  renderRedGlimmer(strip_1, NUM_LEDS_STRIP, 1000);
+  renderRedGlimmer(strip_2, NUM_LEDS_STRIP);
   renderRedGlimmerMatrix();
   renderSearchlightCombined();
 }
