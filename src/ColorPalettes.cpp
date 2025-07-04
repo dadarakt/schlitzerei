@@ -4,15 +4,16 @@
 
 int paletteIndex = 0;
 
-const int NUM_PALETTES = 6;
-
 const CRGBPalette16 palettes[NUM_PALETTES] = {
-    reddish,
     oranje,
     bluePalette,
     redPalette,
     ForestColors_p,
     CloudColors_p
+};
+
+String paletteNames[NUM_PALETTES] = { 
+    "Oranje", "Blues", "Reds", "Forest", "Cloud" 
 };
 
 #include <iostream>
@@ -25,16 +26,21 @@ int findPaletteIndex(CRGBPalette16 palette)
     return 0;
 }
 
+void setPalette(int index) {
+    paletteIndex = index;
+    targetPalette = palettes[paletteIndex];
+}
+
 void setPalette(CRGBPalette16 palette) {
     targetPalette = palette;
     paletteIndex = findPaletteIndex(palette);
 }
 
 void nextPalette() {
-    paletteIndex = (paletteIndex + 1) % NUM_PALETTES;
-    targetPalette = palettes[paletteIndex];
+    int nextPaletteIndex = (paletteIndex + 1) % NUM_PALETTES;
+    setPalette(nextPaletteIndex);
 }
 
 void updatePalettes() {
-  nblendPaletteTowardPalette(currentPalette, targetPalette, 1);
+  nblendPaletteTowardPalette(currentPalette, targetPalette, 5);
 }

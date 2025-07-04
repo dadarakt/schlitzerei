@@ -9,19 +9,19 @@ CRGB bar_1[NUM_LEDS_BAR];
 CRGB bar_2[NUM_LEDS_BAR];
 CRGB matrix[NUM_LEDS_MATRIX];
 
-int currentBrightness = 25;
+int currentBrightness = 50;
 
 CRGBPalette16 currentPalette = oranje; 
 CRGBPalette16 targetPalette = oranje;
 TBlendType currentBlending = LINEARBLEND;
 
 // Modifiers
-
 int t_mod = 0;
 double mod1 = 0;
 double mod2 = 0;
 int decay_rate = 100;
-bool autoCycle = false;
+bool autoCyclePatterns = false;
+bool autoCyclePalettes = true;
 
 void updateModifiers() {
     t_mod = (millis() / 100) % 65535;

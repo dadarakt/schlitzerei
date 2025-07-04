@@ -42,7 +42,8 @@ extern double mod2;
 extern int currentBrightness;
 extern TBlendType currentBlending;
 extern int decay_rate;
-extern bool autoCycle;
+extern bool autoCyclePatterns;
+extern bool autoCyclePalettes;
 
 extern CRGBPalette16 currentPalette; 
 extern CRGBPalette16 targetPalette;

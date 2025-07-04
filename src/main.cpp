@@ -123,9 +123,14 @@ void loop() {
     renderActivePattern();
   }
 
-  EVERY_N_SECONDS(5) {
-    if (autoCycle) {
+  EVERY_N_SECONDS(20) {
+    if (autoCyclePatterns) {
       nextPattern();
+    }
+  }
+  EVERY_N_SECONDS(5) {
+    if (autoCyclePalettes) {
+      nextPalette();
     }
   }
 

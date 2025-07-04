@@ -20,10 +20,10 @@ void spawnNewWave() {
   uint8_t index = random8();
   w.color = ColorFromPalette(currentPalette, index);
 
-  w.feather_width = random(3, 8);  // width
+  w.feather_width = random(3, 20);  // width
 
   // Random speed: total wave lifetime between 1000–2500ms
-  w.duration = random(1000, 2500);
+  w.duration = random(1000, 4000);
 
   waves.push_back(w);
   next_wave_time = millis() + random(100, 500);
@@ -33,6 +33,8 @@ void renderWaves() {
   fadeToBlackBy(matrix, NUM_LEDS_MATRIX, 5);  // adjust fade rate as needed
   fadeToBlackBy(bar_1, NUM_LEDS_BAR, 5);
   fadeToBlackBy(bar_2, NUM_LEDS_BAR, 5);
+  fadeToBlackBy(strip_1, NUM_LEDS_STRIP, 5);
+  fadeToBlackBy(strip_2, NUM_LEDS_STRIP, 5);
 
   unsigned long now = millis();
 
@@ -49,8 +51,9 @@ void renderWaves() {
       continue;
     }
 
-    unsigned long matrix_phase = waves[w].duration * 0.25;  // matrix = 25% of duration
-    unsigned long bar_phase = waves[w].duration - matrix_phase;
+    unsigned long matrix_phase = waves[w].duration * 0.2;  // matrix = 20% of duration
+    unsigned long bar_phase = waves[w].duration * 0.4;     // bars = 40% of duration
+    unsigned long strip_phase = waves[w].duration * 0.4;   // strips = 40% of duration
 
     CRGB base_color = waves[w].color;
     float feather = waves[w].feather_width;
@@ -70,7 +73,7 @@ void renderWaves() {
           matrix[XY(x, y)] += color;
         }
       }
-    } else {
+    } else if (age < (matrix_phase + bar_phase)){
       float progress = (age - matrix_phase) / (float)bar_phase;
       float radius = NUM_LEDS_BAR * progress;
 
@@ -82,6 +85,19 @@ void renderWaves() {
 
         bar_1[i] += color;
         bar_2[i] += color;
+      }
+    } else {
+      float progress = (age - matrix_phase - bar_phase) / (float)strip_phase;
+      float radius = NUM_LEDS_STRIP * progress;
+
+      for (int i = 0; i < NUM_LEDS_STRIP; i++) {
+        float distance = i;
+        float brightness = max(0.0f, 1.0f - abs(distance - radius) / feather);
+        CRGB color = base_color;
+        color.nscale8(brightness * 255);
+
+        strip_1[i] += color;
+        strip_2[i] += color;
       }
     }
 

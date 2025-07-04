@@ -10,7 +10,7 @@ uint16_t minSpeed = 5;
 uint16_t maxSpeed = 20;
 uint16_t speed = 5;  // a nice starting speed, mixes well with a scale of 100
 uint16_t minScale = 1;
-uint16_t maxScale = 50;
+uint16_t maxScale = 10;
 uint16_t scale = 10;  // scale 50 is nice marbly, lower gets to shifting colors, higher to flimmering
 
 int x = random16();
@@ -50,11 +50,11 @@ void fill_noise_8() {
     }
   }
 
-  z += speed / 10;
+  z += speed / 2;
 
   // apply slow drift to X and Y, just for visual variation.
-  x += speed / 16;
-  y -= speed / 32;
+  x += speed / 4;
+  y -= speed / 8;
 }
 
 void map_noise_to_leds_with_palette(CRGB leds[], uint8_t rows, uint8_t cols, uint8_t offset) {
