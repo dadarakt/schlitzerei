@@ -44,6 +44,7 @@ extern TBlendType currentBlending;
 extern int decay_rate;
 extern bool autoCyclePatterns;
 extern bool autoCyclePalettes;
+extern bool strobeActive;
 
 extern CRGBPalette16 currentPalette; 
 extern CRGBPalette16 targetPalette;

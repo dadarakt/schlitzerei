@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "LEDHelpers.h"
 #include "Server.h"
+#include "StrobeEffect.h"
 
 #include "patterns/Patterns.h"
 #include "patterns/WaveRenderer.h"
@@ -86,8 +87,6 @@ void renderActivePattern() {
     case wavePattern:        renderWaves(); break;
     case searchlightPattern: renderSearchlightPattern(); break;
   };
-
-  FastLED.show();
 }
 
 void setup() {
@@ -107,8 +106,6 @@ void setup() {
   fill_solid(strip_1, NUM_LEDS_STRIP, CRGB::Black);
   fill_solid(strip_2, NUM_LEDS_STRIP, CRGB::Black);
   fill_solid(matrix, NUM_LEDS_MATRIX, CRGB::Black);
-
-  FastLED.show();
 }
 
 void loop() {
@@ -133,6 +130,22 @@ void loop() {
       nextPalette();
     }
   }
+
+  static unsigned long lastTrigger = 0;
+  unsigned long now = millis();
+
+  // Check if it's time to trigger the next strobe
+  if (strobeActive && !isStrobeActive() && now - lastTrigger >= 20000) {
+    int duration = random(3000, 5000); // random duration between 3-5 seconds
+    startStrobe(duration, true);      // set to true for white strobe
+    lastTrigger = now;
+  }
+
+  // Update strobe effect every frame
+  updateStrobeEffect();
+
+  FastLED.show();
+
 
   //check_particle_event();
   //if (particle_event) {

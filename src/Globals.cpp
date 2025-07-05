@@ -22,6 +22,7 @@ double mod2 = 0;
 int decay_rate = 100;
 bool autoCyclePatterns = false;
 bool autoCyclePalettes = true;
+bool strobeActive = false;
 
 void updateModifiers() {
     t_mod = (millis() / 100) % 65535;

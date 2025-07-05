@@ -67,6 +67,15 @@ void handleToggleAutoCyclePalette() {
   }
 }
 
+void handleToggleStrobeActive() {
+  if (server.hasArg("value")) {
+    strobeActive = server.arg("value") == "1";
+    server.send(200, "text/plain", "strobeActive: " + String(autoCyclePalettes));
+  } else {
+    server.send(400, "text/plain", "Missing value parameter");
+  }
+}
+
 void handleSetBrightness() {
   if (server.hasArg("value")) {
     int val = server.arg("value").toInt();
@@ -80,7 +89,7 @@ void handleSetBrightness() {
 }
 
 void handleRoot() {
-  const char* patternNames[] = {"Noise", "Sines", "Waves", "Search Light"};
+  const char* patternNames[] = {"Sines", "Noise", "Waves", "Search Light"};
 
   int patternValue = static_cast<int>(currentPattern);
   int paletteValue = paletteIndex;
@@ -178,22 +187,37 @@ void handleRoot() {
   }
   html += R"rawliteral(</select>)rawliteral";
 
+  html += R"rawliteral("
+    <p>
+        <label>
+        <input type="checkbox" id="strobeActive" onchange="toggleStrobeActive(this.checked)">
+        Strobe Active
+        </label>
+    </p>
+  )rawliteral";
+
   // JS
   html += R"rawliteral(
   <script>
     window.onload = function() {
       document.getElementById('cyclePattern').checked = )rawliteral";
-html += (autoCyclePatterns ? "true" : "false");
-html += R"rawliteral(;
-      document.getElementById('cyclePalette').checked = )rawliteral";
-html += (autoCyclePalettes ? "true" : "false");
-html += R"rawliteral(;
+  html += (autoCyclePatterns ? "true" : "false");
+  html += R"rawliteral(;
+        document.getElementById('cyclePalette').checked = )rawliteral";
+  html += (autoCyclePalettes ? "true" : "false");
+  html += R"rawliteral(;
+        document.getElementById('strobeActive').checked = )rawliteral";
+  html += (strobeActive ? "true" : "false");
+  html += R"rawliteral(;
     };
     function toggleCyclePattern(isChecked) {
       fetch('/toggleAutoCyclePattern?value=' + (isChecked ? '1' : '0'));
     }
     function toggleCyclePalette(isChecked) {
       fetch('/toggleAutoCyclePalette?value=' + (isChecked ? '1' : '0'));
+    }
+    function toggleStrobeActive(isChecked) {
+      fetch('/toggleStrobeActive?value=' + (isChecked ? '1' : '0'));
     }
     function updateSliderValue(val) {
       document.getElementById('sliderValue').innerText = val;
@@ -231,7 +255,7 @@ void initServer() {
   server.on("/setBrightness", handleSetBrightness);
   server.on("/toggleAutoCyclePattern", handleToggleAutoCyclePattern);
   server.on("/toggleAutoCyclePalette", handleToggleAutoCyclePalette);
-
+  server.on("/toggleStrobeActive", handleToggleStrobeActive);
 
   server.begin();
 }
