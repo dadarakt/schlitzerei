@@ -137,8 +137,14 @@ void handleRoot() {
 
   // Pattern setting
   html += R"rawliteral(
-      <h2>Select Pattern</h2>
-      <select id="patternSelect" onchange="setPattern(this.value)">)rawliteral";
+    <h2>Select Pattern</h2>
+    <p>
+        <label>
+        <input type="checkbox" id="cyclePattern" onchange="toggleCyclePattern(this.checked)">
+        Auto Cycle Pattern
+        </label>
+    </p>
+    <select id="patternSelect" onchange="setPattern(this.value)">)rawliteral";
   for (int i = 0; i < sizeof(patternNames) / sizeof(patternNames[0]); ++i) {
     html += "<option value=\"";
     html += i;
@@ -152,8 +158,14 @@ void handleRoot() {
 
   // Color setting
   html += R"rawliteral(
-      <h2>Select Colors</h2>
-      <select id="paletteSelect" onchange="setPalette(this.value)">)rawliteral";
+    <h2>Select Colors</h2>
+    <p>
+        <label>
+        <input type="checkbox" id="cyclePalette" onchange="toggleCyclePalette(this.checked)">
+        Auto Cycle Palette
+        </label>
+    </p>
+    <select id="paletteSelect" onchange="setPalette(this.value)">)rawliteral";
 
   for (int i = 0; i < NUM_PALETTES; ++i) {
     html += "<option value=\"";
@@ -165,23 +177,6 @@ void handleRoot() {
     html += "</option>";
   }
   html += R"rawliteral(</select>)rawliteral";
-
-  // Toggles
-  html += R"rawliteral(
-  <h2>Auto-Cycle</h2>
-  <p>
-    <label>
-      <input type="checkbox" id="cyclePattern" onchange="toggleCyclePattern(this.checked)">
-      Auto Cycle Pattern
-    </label>
-  </p>
-  <p>
-    <label>
-      <input type="checkbox" id="cyclePalette" onchange="toggleCyclePalette(this.checked)">
-      Auto Cycle Palette
-    </label>
-  </p>
-)rawliteral";
 
   // JS
   html += R"rawliteral(
