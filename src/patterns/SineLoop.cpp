@@ -3,7 +3,7 @@
 
 // moving sine waves
 byte intense;
-fract8 intensity = 100;
+fract8 intensity = 255;
 int speed_1 = 9;
 int speed_2 = 5;
 int speed_3 = 20;

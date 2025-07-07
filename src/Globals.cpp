@@ -21,7 +21,7 @@ double mod1 = 0;
 double mod2 = 0;
 int decay_rate = 100;
 bool autoCyclePatterns = false;
-bool autoCyclePalettes = true;
+bool autoCyclePalettes = false;
 bool strobeActive = false;
 
 void updateModifiers() {
