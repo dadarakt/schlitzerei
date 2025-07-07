@@ -23,6 +23,9 @@ int decay_rate = 100;
 bool autoCyclePatterns = false;
 bool autoCyclePalettes = false;
 bool strobeActive = false;
+bool glitterEffectActive = false;
+bool pulseEffectActive = false;
+bool particleEffectActive = false;
 
 void updateModifiers() {
     t_mod = (millis() / 100) % 65535;

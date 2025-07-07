@@ -30,9 +30,17 @@ void stopStrobe() {
 }
 
 void updateStrobeEffect() {
+  // Check if it's time to trigger the next strobe
+  static unsigned long now = millis();
+  static unsigned long lastTrigger = 0;
+  if (strobeActive && !isStrobeActive() && now - lastTrigger >= 20000) {
+    int duration = random(3000, 5000); // random duration between 3-5 seconds
+    startStrobe(duration, true);      // set to true for white strobe
+    lastTrigger = now;
+  }
+
   if (!strobeCurrentlyActive) return;
 
-  unsigned long now = millis();
   if (now - strobeStartTime > strobeDuration) {
     strobeCurrentlyActive = false;
     return;
