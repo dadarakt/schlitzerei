@@ -7,6 +7,8 @@ CRGB strip_1[NUM_LEDS_STRIP];
 CRGB strip_2[NUM_LEDS_STRIP];
 CRGB bar_1[NUM_LEDS_BAR];
 CRGB bar_2[NUM_LEDS_BAR];
+CRGB bar_3[NUM_LEDS_BAR];
+CRGB bar_4[NUM_LEDS_BAR];
 CRGB matrix[NUM_LEDS_MATRIX];
 
 int currentBrightness = 50;

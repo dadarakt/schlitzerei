@@ -40,7 +40,9 @@ void sine_loop(CRGB leds[], int num_leds, int factor) {
 
 void render_sine() {
   sine_loop(bar_1, NUM_LEDS_BAR, 1);
-  sine_loop(bar_2, NUM_LEDS_BAR, 1);
+  sine_loop(bar_2, NUM_LEDS_BAR, 2);
+  sine_loop(bar_3, NUM_LEDS_BAR, 3);
+  sine_loop(bar_4, NUM_LEDS_BAR, 4);
   sine_loop(matrix, NUM_LEDS_MATRIX, 3);
   sine_loop(strip_1, NUM_LEDS_STRIP, 1);
   sine_loop(strip_2, NUM_LEDS_STRIP, 1);

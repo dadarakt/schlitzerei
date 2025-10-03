@@ -33,6 +33,8 @@ void renderWaves() {
   fadeToBlackBy(matrix, NUM_LEDS_MATRIX, 5);  // adjust fade rate as needed
   fadeToBlackBy(bar_1, NUM_LEDS_BAR, 5);
   fadeToBlackBy(bar_2, NUM_LEDS_BAR, 5);
+  fadeToBlackBy(bar_3, NUM_LEDS_BAR, 5);
+  fadeToBlackBy(bar_4, NUM_LEDS_BAR, 5);
   fadeToBlackBy(strip_1, NUM_LEDS_STRIP, 5);
   fadeToBlackBy(strip_2, NUM_LEDS_STRIP, 5);
 
@@ -85,6 +87,8 @@ void renderWaves() {
 
         bar_1[i] += color;
         bar_2[i] += color;
+        bar_3[i] += color;
+        bar_4[i] += color;
       }
     } else {
       float progress = (age - matrix_phase - bar_phase) / (float)strip_phase;
