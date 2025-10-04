@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "LEDHelpers.h"
 
+using namespace LEDStore;
+
 uint8_t data, old_data, new_data;
 uint16_t i_offset, j_offset;
 
@@ -68,7 +70,7 @@ void map_noise_to_leds_with_palette(CRGB leds[], uint8_t rows, uint8_t cols, uin
       // for our pixel's index into the color palette.
 
       uint8_t index = noise[(j+offset) % MATRIX_MAX_DIMENSION][(i+offset) % MATRIX_MAX_DIMENSION];
-      uint8_t bri = noise[(i+offset) % MATRIX_MAX_DIMENSION][(j+offset) % MATRIX_MAX_DIMENSION];
+      uint8_t bri = noise[abs(i-offset) % MATRIX_MAX_DIMENSION][(j+offset) % MATRIX_MAX_DIMENSION];
 
       // if this palette is a 'loop', add a slowly-changing base value
       if (colorLoop) {
@@ -119,6 +121,8 @@ void render_noise() {
   map_noise_to_leds_with_palette(matrix, ROWS, COLS, 0);
   map_noise_to_leds_with_palette(bar_1, NUM_LEDS_BAR, 1, 50);
   map_noise_to_leds_with_palette(bar_2, NUM_LEDS_BAR, 1, 100);
+  map_noise_to_leds_with_palette(bar_3, NUM_LEDS_BAR, 1, 150);
+  map_noise_to_leds_with_palette(bar_4, NUM_LEDS_BAR, 1, 20);
   map_noise_to_leds_with_palette(strip_1, NUM_LEDS_STRIP, 1, 50);
   map_noise_to_leds_with_palette(strip_2, NUM_LEDS_STRIP, 1, 100);
 }

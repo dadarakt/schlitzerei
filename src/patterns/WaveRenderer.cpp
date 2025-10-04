@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "LEDHelpers.h"
 
+using namespace LEDStore;
+
 static std::vector<Wave> waves;
 static unsigned long next_wave_time = 0;
 const unsigned long wave_lifetime = 1500;

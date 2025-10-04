@@ -17,29 +17,36 @@ constexpr int MATRIX_DATA_PIN = 2;
 // 4 right outer
 #define BAR_LED_TYPE WS2812
 constexpr int NUM_LEDS_BAR = 142;
-constexpr int BAR1_DATA_PIN = 22; // 22
-constexpr int BAR2_DATA_PIN = 23; // 23
-constexpr int BAR3_DATA_PIN = 4;  
-constexpr int BAR4_DATA_PIN = 15;  
+constexpr int NUM_BARS = 4;
+constexpr int BAR_1_DATA_PIN = 22;
+constexpr int BAR_2_DATA_PIN = 23;
+constexpr int BAR_3_DATA_PIN = 4;
+constexpr int BAR_4_DATA_PIN = 15;
 
 // --- LED Strips ---
 // 1 left
 // 2 right
 #define STRIP_LED_TYPE WS2801
 constexpr int NUM_LEDS_STRIP = 50;
-constexpr int STRIP1_CLOCK_PIN = 21;
-constexpr int STRIP1_DATA_PIN = 19;
-constexpr int STRIP2_CLOCK_PIN = 18;
-constexpr int STRIP2_DATA_PIN = 5;
+constexpr int NUM_STRIPS = 2;
+constexpr int STRIP_1_DATA_PIN = 19;
+constexpr int STRIP_2_DATA_PIN = 5;
+constexpr int STRIP_1_CLOCK_PIN = 21;
+constexpr int STRIP_2_CLOCK_PIN = 18;
 
-// --- FastLED CRGB arrays (extern) ---
-extern CRGB matrix[NUM_LEDS_MATRIX];
-extern CRGB bar_1[NUM_LEDS_BAR];
-extern CRGB bar_2[NUM_LEDS_BAR];
-extern CRGB bar_3[NUM_LEDS_BAR];
-extern CRGB bar_4[NUM_LEDS_BAR];
-extern CRGB strip_1[NUM_LEDS_STRIP];
-extern CRGB strip_2[NUM_LEDS_STRIP];
+namespace LEDStore {
+    extern CRGB bar_1[NUM_LEDS_BAR];
+    extern CRGB bar_2[NUM_LEDS_BAR];
+    extern CRGB bar_3[NUM_LEDS_BAR];
+    extern CRGB bar_4[NUM_LEDS_BAR];
+    extern CRGB* bars[NUM_BARS];
+
+    extern CRGB strip_1[NUM_LEDS_STRIP];
+    extern CRGB strip_2[NUM_LEDS_STRIP];
+    extern CRGB* strips[NUM_STRIPS];
+
+    extern CRGB matrix[NUM_LEDS_MATRIX];
+}
 
 // Constants
 constexpr float fps = 120;

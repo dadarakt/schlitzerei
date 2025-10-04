@@ -2,6 +2,8 @@
 #include "Globals.h"
 #include <FastLED.h> // Needed for qadd8, qsub8, mul8
 
+using namespace LEDStore;
+
 void fill_solid_all(CRGB color) {
   fill_solid(bar_1, NUM_LEDS_BAR, color);
   fill_solid(bar_2, NUM_LEDS_BAR, color);

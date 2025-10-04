@@ -2,6 +2,8 @@
   #include "SearchlightPattern.h"
   #include "Globals.h"
   #include "LEDHelpers.h"
+
+  using namespace LEDStore;
   
   extern double mod1;
   extern double mod2;
@@ -66,8 +68,6 @@
   }
   
   void renderSearchlightCombined() {
-    extern CRGB strip_1[];
-    extern CRGB strip_2[];
     if (!searchlight_active) return;
   
     float total_width = NUM_LEDS_BAR * 2 + COLS + NUM_LEDS_STRIP * 2;
@@ -119,8 +119,6 @@
   }
   
   void renderSearchlightPattern() {
-  extern CRGB strip_1[];
-  extern CRGB strip_2[];
 
   updateSearchlight();
   renderRedGlimmer(bar_1, NUM_LEDS_BAR);

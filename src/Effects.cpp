@@ -2,6 +2,8 @@
 #include "Globals.h"
 #include "LEDHelpers.h"
 
+using namespace LEDStore;
+
 const unsigned long short_interval = 1000;
 const unsigned long long_interval = 4000;
 const unsigned long pulse_rise = 200;

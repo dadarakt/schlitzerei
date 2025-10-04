@@ -1,70 +1,51 @@
-// StrobeEffect.cpp
 #include "StrobeEffect.h"
 #include "Globals.h"
 #include "LEDHelpers.h"
 #include <FastLED.h>
 
+using namespace LEDStore;
+
 extern CRGBPalette16 currentPalette;
 
 namespace {
   unsigned long strobeStartTime = 0;
-  unsigned long strobeDuration = 0;
-  bool strobeCurrentlyActive = false;
-  CRGB strobeColor;
-  int strobeFrequency = 20; // Hz
+  unsigned long strobeDuration  = 0;
+  bool          strobeActiveNow = false;
+  CRGB          strobeColor;
+  int           strobeFrequency = 20; // Hz
 }
 
-void startStrobe(unsigned long durationMs, bool useWhite) {
-  strobeStartTime = millis();
-  strobeDuration = durationMs;
-  strobeCurrentlyActive = true;
-  if (useWhite) {
-    strobeColor = CRGB::White;
-  } else {
-    strobeColor = ColorFromPalette(currentPalette, random8());
-  }
+static inline void startBurst(unsigned long durationMs, bool useWhite) {
+  strobeStartTime  = millis();
+  strobeDuration   = durationMs;
+  strobeActiveNow  = true;
+  strobeColor      = useWhite ? CRGB::White : ColorFromPalette(currentPalette, random8());
 }
 
-void stopStrobe() {
-  strobeCurrentlyActive = false;
+void triggerStrobeBurst(unsigned long durationMs, bool useWhite) {
+  // Ignore if a burst is already running; drop extra presses
+  if (!strobeActiveNow) startBurst(durationMs, useWhite);
 }
+
+void stopStrobe() { strobeActiveNow = false; }
+
+bool isStrobeActive() { return strobeActiveNow; }
 
 void updateStrobeEffect() {
-  // Check if it's time to trigger the next strobe
-  static unsigned long now = millis();
-  static unsigned long lastTrigger = 0;
-  if (strobeActive && !isStrobeActive() && now - lastTrigger >= 20000) {
-    int duration = random(3000, 5000); // random duration between 3-5 seconds
-    startStrobe(duration, true);      // set to true for white strobe
-    lastTrigger = now;
-  }
+  const unsigned long now = millis();
+  if (!strobeActiveNow) return;
 
-  if (!strobeCurrentlyActive) return;
-
-  if (now - strobeStartTime > strobeDuration) {
-    strobeCurrentlyActive = false;
+  if (now - strobeStartTime >= strobeDuration) {
+    strobeActiveNow = false;
     return;
   }
 
-  // Compute current frame within the strobe cycle
-  unsigned long cycleMs = 1000 / strobeFrequency;
-  bool onFrame = ((now / cycleMs) % 2) == 0;
+  const unsigned long cycleMs = 1000UL / strobeFrequency;
+  const bool onFrame = (((now - strobeStartTime) / cycleMs) % 2U) == 0U;
 
-  if (onFrame) {
-    fill_solid(matrix, NUM_LEDS_MATRIX, strobeColor);
-    fill_solid(bar_1, NUM_LEDS_BAR, strobeColor);
-    fill_solid(bar_2, NUM_LEDS_BAR, strobeColor);
-    fill_solid(bar_3, NUM_LEDS_BAR, strobeColor);
-    fill_solid(bar_4, NUM_LEDS_BAR, strobeColor);
-  } else {
-    fill_solid(matrix, NUM_LEDS_MATRIX, CRGB::Black);
-    fill_solid(bar_1, NUM_LEDS_BAR, CRGB::Black);
-    fill_solid(bar_2, NUM_LEDS_BAR, CRGB::Black);
-    fill_solid(bar_3, NUM_LEDS_BAR, CRGB::Black);
-    fill_solid(bar_4, NUM_LEDS_BAR, CRGB::Black);
-  }
-}
-
-bool isStrobeActive() {
-  return strobeCurrentlyActive;
+  fill_solid(matrix, NUM_LEDS_MATRIX, onFrame ? strobeColor : CRGB::Black);
+  fill_solid(bar_1,  NUM_LEDS_BAR,   onFrame ? strobeColor : CRGB::Black);
+  fill_solid(bar_2,  NUM_LEDS_BAR,   onFrame ? strobeColor : CRGB::Black);
+  fill_solid(bar_3,  NUM_LEDS_BAR,   onFrame ? strobeColor : CRGB::Black);
+  fill_solid(bar_4,  NUM_LEDS_BAR,   onFrame ? strobeColor : CRGB::Black);
 }

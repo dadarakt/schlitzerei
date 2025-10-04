@@ -1,6 +1,8 @@
 #include "MuxInput.h"
 #include "Globals.h"
 #include "patterns/Patterns.h"
+#include "ColorPalettes.h"
+#include "StrobeEffect.h"
 
 // edge detection flags
 bool lastBtn0 = false;
@@ -54,27 +56,25 @@ void muxRead() {
   bool b0 = gButtons[0];
   if (b0 && !lastBtn0) {
     nextPattern();
-    //strobeActive = !strobeActive; // toggle once per press
   }
   lastBtn0 = b0;
 
   bool b1 = gButtons[1];
   if (b1 && !lastBtn1) {
-    nextPattern();
+    nextPalette();
   }
   lastBtn1 = b1;
 
   bool b2 = gButtons[2]; 
   if (b2 && !lastBtn2) {
-    nextPattern();
+    //nextPattern();
     //nextPalette();
   }
   lastBtn2 = b2;
 
   bool b3 = gButtons[3]; 
   if (b3 && !lastBtn3) {
-    //nextPattern();
-    strobeActive = !strobeActive; // toggle once per press
+    triggerStrobeBurst(random(3000, 5000), true);
   }
   lastBtn3 = b3;
 }

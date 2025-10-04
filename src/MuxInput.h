@@ -14,7 +14,7 @@ namespace MuxCfg {
   constexpr int S2 = 27;
 
   // Channels
-  constexpr uint8_t BTN_CH[4] = {0, 1, 2, 3};
+  constexpr uint8_t BTN_CH[4] = {2, 1, 0, 3};
   constexpr uint8_t POT_CH    = 4;
 
   // Thresholds (pull-up buttons: LOW when pressed)

@@ -1,6 +1,8 @@
 #include "SineLoop.h"
 #include "Globals.h"
 
+using namespace LEDStore;
+
 // moving sine waves
 byte intense;
 fract8 intensity = 255;

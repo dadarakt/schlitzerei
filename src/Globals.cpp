@@ -3,13 +3,19 @@
 #include "ColorPalettes.h"
 
 // LED setup
-CRGB strip_1[NUM_LEDS_STRIP];
-CRGB strip_2[NUM_LEDS_STRIP];
-CRGB bar_1[NUM_LEDS_BAR];
-CRGB bar_2[NUM_LEDS_BAR];
-CRGB bar_3[NUM_LEDS_BAR];
-CRGB bar_4[NUM_LEDS_BAR];
-CRGB matrix[NUM_LEDS_MATRIX];
+namespace LEDStore {
+    CRGB bar_1[NUM_LEDS_BAR];
+    CRGB bar_2[NUM_LEDS_BAR];
+    CRGB bar_3[NUM_LEDS_BAR];
+    CRGB bar_4[NUM_LEDS_BAR];
+    CRGB* bars[NUM_BARS] = {bar_1, bar_2, bar_3, bar_4};
+
+    CRGB matrix[NUM_LEDS_MATRIX];
+
+    CRGB strip_1[NUM_LEDS_STRIP];
+    CRGB strip_2[NUM_LEDS_STRIP];
+    CRGB* strips[NUM_STRIPS] = {strip_1, strip_2};
+}
 
 int currentBrightness = 50;
 
