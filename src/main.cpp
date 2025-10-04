@@ -2,7 +2,7 @@
 #include "ColorPalettes.h"
 #include "Globals.h"
 #include "LEDHelpers.h"
-#include "Server.h"
+//#include "Server.h"
 #include "StrobeEffect.h"
 #include "Effects.h"
 
@@ -22,53 +22,8 @@ void renderActivePattern() {
   };
 }
 
-// simple edge-detect for button 0
-bool lastBtn0 = false;
-bool lastBtn1 = false;
-bool lastBtn2 = false;
-bool lastBtn3 = false;
-
-void processInputs() {
-  muxRead();
-
-  // Pot → brightness (re-apply to FastLED)
-  currentBrightness = map(gPotRaw, 0, 4095, 255, 0);
-  FastLED.setBrightness(currentBrightness);   // <-- needed every update
-
-  // Button 0: toggle on press edge
-  bool b0 = gButtons[0];          // true when pressed (per your mux code)
-  if (b0 && !lastBtn0) {
-    nextPattern();
-    //strobeActive = !strobeActive; // toggle once per press
-  }
-  lastBtn0 = b0;
-
-  // Button 1: toggle on press edge
-  bool b1 = gButtons[1];          // true when pressed (per your mux code)
-  if (b1 && !lastBtn1) {
-    nextPattern();
-  }
-  lastBtn1 = b1;
-
-  // Button 0: toggle on press edge
-  bool b2 = gButtons[2];          // true when pressed (per your mux code)
-  if (b2 && !lastBtn2) {
-    nextPattern();
-    //nextPalette();
-  }
-  lastBtn2 = b2;
-
-  // Button 0: toggle on press edge
-  bool b3 = gButtons[3];          // true when pressed (per your mux code)
-  if (b3 && !lastBtn3) {
-    //nextPattern();
-    strobeActive = !strobeActive; // toggle once per press
-  }
-  lastBtn3 = b3;
-}
-
 void setup() {
-  initServer();
+  //initServer();
   muxInit();
 
   // LED setup
@@ -94,7 +49,7 @@ void setup() {
 }
 
 void loop() {
-  updateServer();
+  //updateServer();
 
   EVERY_N_SECONDS(29) {
     if (autoCyclePatterns) {
@@ -114,12 +69,11 @@ void loop() {
     fade_all(decay_rate);
 
     renderActivePattern();
-    processInputs();
+    muxRead();
+    updateStrobeEffect();
+    updateEffects();
+
+    FastLED.show();
   }
-
-  updateStrobeEffect();
-  updateEffects();
-
-  FastLED.show();
 }
 
