@@ -2,6 +2,7 @@
 #pragma once
 
 enum Pattern {
+  panelPulsePattern,
   sinePattern,
   noisePattern,
   wavePattern,

@@ -5,18 +5,21 @@
 //#include "Server.h"
 #include "StrobeEffect.h"
 #include "Effects.h"
+#include "MuxInput.h"
+#include "CrowdBlinder.h"
 
 #include "patterns/Patterns.h"
 #include "patterns/WaveRenderer.h"
 #include "patterns/SineLoop.h"
 #include "patterns/NoisePatterns.h"
 #include "patterns/SearchlightPattern.h"
-#include "MuxInput.h"
+#include "patterns/PanelPulse.h"
 
 using namespace LEDStore;
 
 void renderActivePattern() {
   switch(currentPattern) {
+    case panelPulsePattern:  renderPanelPulse(); break;
     case sinePattern:        render_sine(); break;
     case noisePattern:       render_noise(); break;
     case wavePattern:        renderWaves(); break;
@@ -74,6 +77,7 @@ void loop() {
     renderActivePattern();
     muxRead();
     updateStrobeEffect();
+    crowdBlinderUpdate();
     //updateEffects();
 
     FastLED.show();

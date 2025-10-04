@@ -3,6 +3,7 @@
 #include "patterns/Patterns.h"
 #include "ColorPalettes.h"
 #include "StrobeEffect.h"
+#include "CrowdBlinder.h"
 
 // edge detection flags
 bool lastBtn0 = false;
@@ -65,12 +66,12 @@ void muxRead() {
   }
   lastBtn1 = b1;
 
-  bool b2 = gButtons[2]; 
-  if (b2 && !lastBtn2) {
-    //nextPattern();
-    //nextPalette();
+  // While-held CrowdBlinder on button 1
+  bool b2 = gButtons[2];          // true when pressed
+  if (b2 != lastBtn2) {
+    crowdBlinderEnable(b2);        // start on press, stop on release
+    lastBtn2 = b2;
   }
-  lastBtn2 = b2;
 
   bool b3 = gButtons[3];                 // true when pressed
   if (b3 && !lastBtn3) {

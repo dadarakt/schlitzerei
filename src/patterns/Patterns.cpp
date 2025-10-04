@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "ColorPalettes.h"
 
-Pattern currentPattern = wavePattern;
+Pattern currentPattern = searchlightPattern;
 
 void setPattern(Pattern pattern) {
   currentPattern = pattern;
