@@ -32,27 +32,72 @@ void updateSearchlight() {
   }
 }
 
+// Palette-driven, high-contrast glimmer for 1D arrays (bars / strips)
 void renderRedGlimmer(CRGB* leds, int num_leds, uint16_t offset = 0) {
-  float speed = 25 + ((mod1 + 1.0f) * 0.5f) * 4.0f;
-  for (int i = 0; i < num_leds; i++) {
-    uint8_t noise = inoise8(i * 10, millis() / 8 + offset);
-    int red_intensity = 30 + noise * 0.4f + ((mod1 + 1.0f) * 0.5f) * 80.0f;
-    uint8_t red = min(red_intensity, 180);
-    leds[i] = CRGB(red, red / 10, red / 20);
+  extern CRGBPalette16 currentPalette;
+
+  // Faster evolution; mod1 still nudges speed
+  const uint32_t tFast = millis();
+  const uint16_t tNoise = (uint16_t)(tFast * (0.020f + 0.020f * ((mod1 + 1.0) * 0.5))); // ~20–40 Hz
+
+  // Global palette scroll so hues drift over time
+  const uint8_t scroll = (uint8_t)(tFast >> 5); // slow index drift
+
+  for (int i = 0; i < num_leds; ++i) {
+    // Spatial scale: bigger step = more variation LED-to-LED
+    const uint16_t x = i * 13 + offset;
+
+    // Brightness texture (noise + tiny ripple)
+    uint8_t n  = inoise8(x, tNoise);
+    uint8_t hf = sin8((i * 7) + (tFast >> 2));   // shimmer
+
+    uint16_t v16 = (uint16_t)n + (hf >> 2);
+    if (v16 > 255) v16 = 255;
+
+    // Contrast-y brightness with headroom
+    uint8_t val = sqrt16((uint16_t)(v16 * 257U)); // gamma-ish
+    val = scale8(val, 220);                       // cap for overlay headroom
+
+    // Palette index: base noise + spatial gradient + slow scroll
+    // This guarantees visible hue differences along the strip
+    uint8_t idx = n + (i * 3) + scroll;
+
+    // Pull color from current palette at 'idx' with brightness 'val'
+    leds[i] = ColorFromPalette(currentPalette, idx, val, LINEARBLEND);
   }
 }
 
+// Palette-driven, high-contrast glimmer for the matrix
 void renderRedGlimmerMatrix() {
-  float speed = 25 + ((mod1 + 1.0f) * 0.5f) * 8.0f;
-  for (uint8_t x = 0; x < COLS; x++) {
-    for (uint8_t y = 0; y < ROWS; y++) {
-      uint8_t noise = inoise8(x * 15, y * 15, millis() / 10);
-      int red_intensity = 30 + noise * 0.4f + ((mod1 + 1.0f) * 0.5f) * 80.0f;
-      uint8_t red = min(red_intensity, 180);
-      matrix[XY(x, y)] = CRGB(red, red / 10, red / 20);
+  extern CRGBPalette16 currentPalette;
+
+  const uint32_t tFast = millis();
+  const uint16_t tNoise = (uint16_t)(tFast * (0.018f + 0.022f * ((mod1 + 1.0) * 0.5)));
+  const uint8_t  scroll = (uint8_t)(tFast >> 5);
+
+  for (uint8_t x = 0; x < COLS; ++x) {
+    for (uint8_t y = 0; y < ROWS; ++y) {
+      // Slightly different spatial scale in X/Y so colors vary across the matrix
+      const uint16_t nx = x * 17;
+      const uint16_t ny = y * 19;
+
+      uint8_t n  = inoise8(nx, ny, tNoise);
+      uint8_t hf = sin8((x * 9 + y * 11) + (tFast >> 2));
+
+      uint16_t v16 = (uint16_t)n + (hf >> 3); // lighter ripple on matrix
+      if (v16 > 255) v16 = 255;
+
+      uint8_t val = sqrt16((uint16_t)(v16 * 257U));
+      val = scale8(val, 220);
+
+      // Palette index varies across space and time (diagonal bias + scroll)
+      uint8_t idx = n + (x * 2) - (y * 2) + scroll;
+
+      matrix[XY(x, y)] = ColorFromPalette(currentPalette, idx, val, LINEARBLEND);
     }
   }
 }
+
 
 // --- Sweep helpers ----------------------------------------------------------
 
