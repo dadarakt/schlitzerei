@@ -70,7 +70,7 @@ void handleToggleAutoCyclePalette() {
 void handleToggleStrobeActive() {
   if (server.hasArg("value")) {
     strobeActive = server.arg("value") == "1";
-    server.send(200, "text/plain", "strobeActive: " + String(autoCyclePalettes));
+    server.send(200, "text/plain", "strobeActive: " + String(strobeActive));
   } else {
     server.send(400, "text/plain", "Missing value parameter");
   }
