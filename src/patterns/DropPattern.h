@@ -18,3 +18,5 @@ void dropPatternSetPaletteBrightness(uint8_t v);
 // IMPORTANT: This does NOT clear the LEDs; it only draws new drops.
 // Use your existing decay/fade elsewhere to make things trail & overlap nicely.
 void renderDropPattern();
+
+void dropPatternSetBarSizeBoost(float mul, uint8_t maxCap);
