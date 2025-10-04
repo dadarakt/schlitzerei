@@ -72,9 +72,11 @@ void muxRead() {
   }
   lastBtn2 = b2;
 
-  bool b3 = gButtons[3]; 
+  bool b3 = gButtons[3];                 // true when pressed
   if (b3 && !lastBtn3) {
-    triggerStrobeBurst(random(3000, 5000), true);
+    startStrobeContinuous(true);         // choose white; pass false to use palette
+  } else if (!b3 && lastBtn3) {
+    stopStrobe();
   }
   lastBtn3 = b3;
 }
