@@ -14,11 +14,13 @@
 #include "patterns/NoisePatterns.h"
 #include "patterns/SearchlightPattern.h"
 #include "patterns/PanelPulse.h"
+#include "patterns/DropPattern.h"
 
 using namespace LEDStore;
 
 void renderActivePattern() {
   switch(currentPattern) {
+    case dropPattern:        renderDropPattern(); break;
     case panelPulsePattern:  renderPanelPulse(); break;
     case sinePattern:        render_sine(); break;
     case noisePattern:       render_noise(); break;

@@ -2,11 +2,14 @@
 #include "Globals.h"
 #include "ColorPalettes.h"
 
-Pattern currentPattern = searchlightPattern;
+Pattern currentPattern = dropPattern;
 
 void setPattern(Pattern pattern) {
   currentPattern = pattern;
   switch (pattern) {
+    case dropPattern:
+      decay_rate = 5;
+      break;
     case sinePattern:
       decay_rate = 255;
       break;
