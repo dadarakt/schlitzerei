@@ -9,12 +9,11 @@ const CRGBPalette16 palettes[NUM_PALETTES] = {
     redPalette,
     ForestColors_p,
     CloudColors_p,
-    PinkBluePalette_p,
-    NeonContrastPalette_p
+    PinkBluePalette_p
 };
 
 String paletteNames[NUM_PALETTES] = { 
-    "Oranje", "Reds", "Forest", "Cloud", "Pink-Blue", "Neon"
+    "Oranje", "Reds", "Forest", "Cloud", "Pink-Blue"
 };
 
 #include <iostream>

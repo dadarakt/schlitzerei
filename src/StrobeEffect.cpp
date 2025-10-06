@@ -34,9 +34,15 @@ void updateStrobeEffect() {
 
   if (onFrame) {
     fill_solid(matrix, NUM_LEDS_MATRIX, strobeColor);
-    fill_solid(bar_1,  NUM_LEDS_BAR,    strobeColor);
-    fill_solid(bar_2,  NUM_LEDS_BAR,    strobeColor);
+    // fill_solid(bar_1,  NUM_LEDS_BAR,    strobeColor);
+    // fill_solid(bar_2,  NUM_LEDS_BAR,    strobeColor);
     fill_solid(bar_3,  NUM_LEDS_BAR,    strobeColor);
     fill_solid(bar_4,  NUM_LEDS_BAR,    strobeColor);
+  } else {
+    fill_solid(matrix, NUM_LEDS_MATRIX, CRGB::Black);
+    // fill_solid(bar_1,  NUM_LEDS_BAR,    CRGB::Black);
+    // fill_solid(bar_2,  NUM_LEDS_BAR,    CRGB::Black);
+    fill_solid(bar_3,  NUM_LEDS_BAR,    CRGB::Black);
+    fill_solid(bar_4,  NUM_LEDS_BAR,    CRGB::Black);
   }
 }

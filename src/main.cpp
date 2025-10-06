@@ -59,12 +59,12 @@ void setup() {
 void loop() {
   //updateServer();
 
-  EVERY_N_SECONDS(29) {
+  EVERY_N_SECONDS(177) { // 111
     if (autoCyclePatterns) {
       nextPattern();
     }
   }
-  EVERY_N_SECONDS(17) {
+  EVERY_N_SECONDS(111) { // 51
     if (autoCyclePalettes) {
       nextPalette();
     }

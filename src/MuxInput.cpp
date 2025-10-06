@@ -45,8 +45,8 @@ void muxInit() {
 void muxRead() {
   // Pot → brightness (re-apply to FastLED)
   gPotRaw = readMux(POT_CH);
-  currentBrightness = map(gPotRaw, 0, 4095, 255, 0);
-  FastLED.setBrightness(currentBrightness);   // <-- needed every update
+  currentBrightness = map(gPotRaw, 0, 4095, 255, 30);
+  FastLED.setBrightness(currentBrightness);
 
   // Buttons (pull-down wiring => LOW = pressed)
   for (int i = 0; i < 4; i++) {
@@ -54,28 +54,56 @@ void muxRead() {
     gButtons[i] = (v < PRESS_THRESHOLD);
   }
 
+  // -------- Buttons 0 & 1: trigger on RELEASE --------
   bool b0 = gButtons[0];
-  if (b0 && !lastBtn0) {
-    nextPattern();
-  }
-  lastBtn0 = b0;
-
   bool b1 = gButtons[1];
-  if (b1 && !lastBtn1) {
-    nextPalette();
+
+  // Detect if both are pressed simultaneously
+  static bool comboActive = false;
+
+  // Combo press: both buttons held down
+  if (b0 && b1) {
+    comboActive = true;
   }
+
+  // Button 0 released
+  if (!b0 && lastBtn0) {
+    if (comboActive && !b1) {
+      // both were pressed together, now both released
+      // → trigger combo action
+      // (example) switch to a special “PanelPulse” pattern:
+      autoCyclePalettes = !autoCyclePalettes;
+      autoCyclePatterns = !autoCyclePatterns;
+      comboActive = false;
+    } else if (!comboActive) {
+      // single button 0 release
+      nextPattern();
+    }
+  }
+
+  // Button 1 released
+  if (!b1 && lastBtn1) {
+    if (!comboActive) {
+      // single button 1 release
+      nextPalette();
+    }
+    // if comboActive, combo already handled above
+  }
+
+  lastBtn0 = b0;
   lastBtn1 = b1;
 
-  // While-held CrowdBlinder on button 1
-  bool b2 = gButtons[2];          // true when pressed
+  // -------- Button 2: CrowdBlinder (while held) --------
+  bool b2 = gButtons[2];
   if (b2 != lastBtn2) {
-    crowdBlinderEnable(b2);        // start on press, stop on release
+    crowdBlinderEnable(b2);
     lastBtn2 = b2;
   }
 
-  bool b3 = gButtons[3];                 // true when pressed
+  // -------- Button 3: Strobe (while held) --------
+  bool b3 = gButtons[3];
   if (b3 && !lastBtn3) {
-    startStrobeContinuous(true);         // choose white; pass false to use palette
+    startStrobeContinuous(true);
   } else if (!b3 && lastBtn3) {
     stopStrobe();
   }

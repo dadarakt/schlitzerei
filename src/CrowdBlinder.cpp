@@ -15,7 +15,7 @@ namespace {
     for (int i = 0; i < count; ++i) {
       leds[i].r = qadd8(leds[i].r, level);
       leds[i].g = qadd8(leds[i].g, level);
-      leds[i].b = qadd8(leds[i].b, level / 2);
+      leds[i].b = qadd8(leds[i].b, level);
     }
   }
 }

@@ -13,9 +13,9 @@ namespace {
 
 // -------------------- Tunables --------------------
 // Higher default base rates (drops per second)
-float  g_baseBarsPerSec   = 4.0f;   // across ALL bars combined
-float  g_baseStripsPerSec = 2.0f;   // across BOTH strips combined
-float  g_baseMatrixPerSec = 8.0f;   // across the matrix
+float  g_baseBarsPerSec   = 2.5f;   // across ALL bars combined
+float  g_baseStripsPerSec = 1.5f;   // across BOTH strips combined
+float  g_baseMatrixPerSec = 6.0f;   // across the matrix
 
 // Mod multipliers: norm(mod) in [0..1] -> rate *= lerp(min, max)
 float  g_modMinMul = 0.5f;
